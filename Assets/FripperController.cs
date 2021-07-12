@@ -11,6 +11,7 @@ public class FripperController : MonoBehaviour
         private float defaultAngle = 20;
         //弾いた時の傾き
         private float flickAngle = -20;
+        private bool on_click_right, on_click_left;
 
         int screenwidth;
         // Use this for initialization
@@ -24,27 +25,66 @@ public class FripperController : MonoBehaviour
                 //Debug.Log("in flipper controler");
                 //screeh x中心座標取得
                 screenwidth = Screen.width/2;
+                on_click_left = on_click_right = false;
 
         }
 
         // Update is called once per frame
         void Update ()
         {
-          Vector3 xy;
+          //Vector3 xy[10];
+          int touch_count;
+          int lc;
+          Touch[] l_touch=new Touch[10];
           // screen touch
-          if (Input.touchCount > 0){
-              Touch touch = Input.GetTouch(0);
-              xy=touch.position;
-              if ((touch.phase == TouchPhase.Began) && (xy.x < screenwidth) && tag == "LeftFripperTag") {
+
+
+
+
+          touch_count = Input.touchCount;
+          //Debug.Log(touch_count);
+          if(touch_count > 10){
+            //tc = Input.GetTouch(0);
+            //Debug.Log(touch_count);
+            touch_count = 10;
+          }
+          l_touch = Input.touches;
+
+          Debug.Log(touch_count);
+
+          if (touch_count > 0){
+              for( lc=0 ; lc<touch_count ; lc++ ){
+                //Debug.Log(l_touch[lc].position);
+                  if( l_touch[lc].phase == TouchPhase.Began && l_touch[lc].position.x < screenwidth){
+                    on_click_left = true;
+                  }
+                  if( l_touch[lc].phase == TouchPhase.Began && l_touch[lc].position.x >= screenwidth){
+                    on_click_right = true;
+                  }
+                  if( l_touch[lc].phase == TouchPhase.Ended && l_touch[lc].position.x < screenwidth){
+                    on_click_left = false;
+                  }
+                  if( l_touch[lc].phase == TouchPhase.Ended && l_touch[lc].position.x >= screenwidth){
+                    on_click_right = false;
+                  }
+              }
+
+              //if ((touch.phase == TouchPhase.Began) && (on_click_left == true ) && tag == "LeftFripperTag") {
+              if ( (on_click_left == true ) && tag == "LeftFripperTag") {
                   SetAngle (this.flickAngle);
               }
-              if ((touch.phase == TouchPhase.Began) && (xy.x >= screenwidth) && tag == "RightFripperTag") {
+              //if ((touch.phase == TouchPhase.Began) && (on_click_right == true ) && tag == "RightFripperTag") {
+              if ((on_click_right == true )  && tag == "RightFripperTag") {
                   SetAngle (this.flickAngle);
               }
-              if (touch.phase == TouchPhase.Ended) {
+              //if (touch.phase == TouchPhase.Ended) {
+              if ( (on_click_left == false ) && tag == "LeftFripperTag") {
                   SetAngle (this.defaultAngle);
               }
-            }
+              if ( (on_click_right == false ) && tag == "RightFripperTag"){
+                  SetAngle (this.defaultAngle);
+              }
+          }
 
           // keyboard
                 //左矢印キーを押した時左フリッパーを動かす
