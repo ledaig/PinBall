@@ -20,34 +20,56 @@ public class FripperController : MonoBehaviour
 
                 //フリッパーの傾きを設定
                 SetAngle(this.defaultAngle);
-                Debug.Log("in flipper controler");
+                //Debug.Log("in flipper controler");
         }
 
         // Update is called once per frame
         void Update ()
         {
-          Debug.Log("in flipper controler update");
+
+          // screen touch
+          if (Input.touchCount > 0){
+              Touch touch = Input.GetTouch(0);
+
+              if (touch.phase == TouchPhase.Began) {
+                  SetAngle (this.flickAngle);
+              }
+              if (touch.phase == TouchPhase.Ended) {
+                  SetAngle (this.defaultAngle);
+              }
+            }
+
+          // keyboard
                 //左矢印キーを押した時左フリッパーを動かす
-                if (Input.GetKeyDown(KeyCode.LeftArrow) && tag == "LeftFripperTag")
+                if (Input.GetKeyDown(KeyCode.A) && tag == "LeftFripperTag")
                 {
                         SetAngle (this.flickAngle);
-                        Debug.Log("left");
                 }
                 //右矢印キーを押した時右フリッパーを動かす
-                if (Input.GetKeyDown(KeyCode.RightArrow) && tag == "RightFripperTag")
+                if (Input.GetKeyDown(KeyCode.D) && tag == "RightFripperTag")
                 {
                         SetAngle (this.flickAngle);
-                          Debug.Log("right");
+
+                }
+                if (Input.GetKeyDown(KeyCode.S ))
+                {
+                      SetAngle (this.flickAngle);
+
                 }
 
                 //矢印キー離された時フリッパーを元に戻す
-                if (Input.GetKeyUp(KeyCode.LeftArrow) && tag == "LeftFripperTag")
+                if (Input.GetKeyUp(KeyCode.A) && tag == "LeftFripperTag")
                 {
                         SetAngle (this.defaultAngle);
                 }
-                if (Input.GetKeyUp(KeyCode.RightArrow) && tag == "RightFripperTag")
+                if (Input.GetKeyUp(KeyCode.D) && tag == "RightFripperTag")
                 {
                         SetAngle (this.defaultAngle);
+                }
+                if (Input.GetKeyUp(KeyCode.S) )
+                {
+                    SetAngle (this.defaultAngle);
+
                 }
         }
 
@@ -58,4 +80,5 @@ public class FripperController : MonoBehaviour
                 jointSpr.targetPosition = angle;
                 this.myHingeJoint.spring = jointSpr;
         }
+
 }

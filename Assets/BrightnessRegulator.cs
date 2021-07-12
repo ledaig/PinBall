@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BrightnessRegulator : MonoBehaviour
 {
@@ -17,6 +18,17 @@ public class BrightnessRegulator : MonoBehaviour
         private int speed = 10;
         // ターゲットのデフォルトの色
         Color defaultColor = Color.white;
+        // score
+        private GameObject scoreText;
+        public Score scoreScript;
+
+        //--
+        private int l_star=20;
+        private int l_cloud=100;
+        private int s_star=10;
+        private int s_cloud=30;
+
+
 
         // Use this for initialization
         void Start ()
@@ -41,6 +53,10 @@ public class BrightnessRegulator : MonoBehaviour
 
                 //オブジェクトの最初の色を設定
                 myMaterial.SetColor ("_EmissionColor", this.defaultColor*minEmission);
+
+                //score object
+                scoreText = GameObject.Find("ScoreText");
+                scoreScript = scoreText.GetComponent<Score>();
         }
 
         // Update is called once per frame
@@ -58,12 +74,38 @@ public class BrightnessRegulator : MonoBehaviour
                         //現在の角度を小さくする
                         this.degree -= this.speed;
                 }
+                //draw score
+                //Debug.Log(this.scoreScript.score);
+
+
         }
 
         //衝突時に呼ばれる関数
         void OnCollisionEnter(Collision other)
         {
+                //ini l_score = script
                 //角度を180に設定
                 this.degree = 180;
+                //this.prev_score = this.socre;
+                if (tag == "SmallStarTag")
+                {
+                      scoreScript.score += s_star;
+                }
+                else if (tag == "LargeStarTag")
+                {
+                      scoreScript.score += l_star;
+                }
+                else if(tag == "SmallCloudTag" )
+                {
+                        scoreScript.score += s_cloud;
+                        //Debug.Log("sc hit");
+                }
+                else if(tag == "LargeCloudTag" )
+                {
+                      scoreScript.score += l_cloud;
+                        //Debug.Log("lc hit");
+                }
+
+
         }
 }
